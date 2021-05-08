@@ -20,7 +20,7 @@ module.exports = createTransactionalMigration(
             .select('value')
             .first();
 
-        const migrateValue = oldSetting.value ? 'all' : 'invite';
+        const migrateValue = oldSetting.value === 'true' ? 'all' : 'invite';
 
         if (newSetting) {
             // new setting already exists, *update* with migrated value
@@ -35,7 +35,7 @@ module.exports = createTransactionalMigration(
             const currentTimestamp = connection.raw('CURRENT_TIMESTAMP');
 
             const newSettingData = {
-                id: ObjectId.generate(),
+                id: ObjectId().toHexString(),
                 group: 'members',
                 key: 'members_signup_access',
                 value: migrateValue,
@@ -75,7 +75,7 @@ module.exports = createTransactionalMigration(
 
         // this can potentially be lossy if going from "nobody" but it matches to the
         // most appropriate setting available in earlier versions of Ghost
-        const rollbackValue = newSetting.value === 'all' ? true : false;
+        const rollbackValue = newSetting.value === 'all' ? 'true' : 'false';
 
         if (oldSetting) {
             logging.info('Updating `members_allow_free_signup` based on value from `members_signup_access`');
@@ -89,7 +89,7 @@ module.exports = createTransactionalMigration(
 
             await connection('settings')
                 .insert({
-                    id: ObjectId.generate(),
+                    id: ObjectId().toHexString(),
                     key: 'members_allow_free_signup',
                     group: 'members',
                     type: 'boolean',
