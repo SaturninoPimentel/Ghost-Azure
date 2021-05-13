@@ -30,15 +30,12 @@ class ActiveTheme {
      * @param {object} checkedTheme - the result of gscan.format for the theme we're activating
      * @param {object} error - bootstrap validates the active theme, we would like to remember this error
      */
-    constructor(settings, loadedTheme, checkedTheme, error) {
+    constructor(loadedTheme, checkedTheme, error) {
         // Assign some data, mark it all as pseudo-private
         this._name = loadedTheme.name;
         this._path = loadedTheme.path;
         this._mounted = false;
         this._error = error;
-
-        // We get passed in a locale
-        this._locale = settings.locale || 'en';
 
         // @TODO: get gscan to return validated, useful package.json fields for us!
         this._packageInfo = loadedTheme['package.json'];
@@ -99,17 +96,8 @@ class ActiveTheme {
         return this._engines[key];
     }
 
-    /**
-     *
-     * @param {object} options
-     * @param {string} [options.activeTheme]
-     * @param {string} [options.locale]
-     */
-    initI18n(options = {}) {
-        options.activeTheme = options.activeTheme || this._name;
-        options.locale = options.locale || this._locale;
-
-        themeI18n.init(options);
+    initI18n() {
+        themeI18n.init(this._name);
     }
 
     mount(siteApp) {
@@ -141,8 +129,8 @@ module.exports = {
      * @param {object} checkedTheme - the result of gscan.format for the theme we're activating
      * @return {ActiveTheme}
      */
-    set(settings, loadedTheme, checkedTheme, error) {
-        currentActiveTheme = new ActiveTheme(settings, loadedTheme, checkedTheme, error);
+    set(loadedTheme, checkedTheme, error) {
+        currentActiveTheme = new ActiveTheme(loadedTheme, checkedTheme, error);
         return currentActiveTheme;
     }
 };

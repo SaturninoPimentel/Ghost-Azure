@@ -14,7 +14,7 @@ const buildInHelpers = hbs.handlebars.helpers;
 const _ = require('lodash');
 
 /**
- * @deprecated: single authors was superceded by multiple authors in Ghost 1.22.0
+ * @deprecated: will be removed in Ghost 3.0
  */
 module.exports = function author(options) {
     if (options.fn) {

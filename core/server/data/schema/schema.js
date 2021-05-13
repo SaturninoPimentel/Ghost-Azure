@@ -27,16 +27,18 @@ module.exports = {
             type: 'string',
             maxlength: 50,
             nullable: false,
-            defaultTo: 'public'
+            defaultTo: 'public',
+            validations: {isIn: [['public', 'members', 'paid']]}
         },
         email_recipient_filter: {
             type: 'string',
             maxlength: 50,
             nullable: false,
-            defaultTo: 'none'
+            defaultTo: 'none',
+            validations: {isIn: [['none', 'all', 'free', 'paid']]}
         },
         /**
-         * @deprecated: single authors was superceded by multiple authors in Ghost 1.22.0
+         * @deprecated: `author_id`, might be removed in Ghost 3.0
          * If we keep it, then only, because you can easier query post.author_id than posts_authors[*].sort_order.
          */
         author_id: {type: 'string', maxlength: 24, nullable: false},
@@ -362,9 +364,8 @@ module.exports = {
     },
     products: {
         id: {type: 'string', maxlength: 24, nullable: false, primary: true},
-        name: {type: 'string', maxlength: 191, nullable: false},
+        name: {type: 'string', maxlength: 191, nullable: false, unique: true},
         slug: {type: 'string', maxlength: 191, nullable: false, unique: true},
-        description: {type: 'string', maxlength: 191, nullable: true},
         created_at: {type: 'dateTime', nullable: false},
         updated_at: {type: 'dateTime', nullable: true}
     },
@@ -489,13 +490,12 @@ module.exports = {
         id: {type: 'string', maxlength: 24, nullable: false, primary: true},
         stripe_price_id: {type: 'string', maxlength: 255, nullable: false, unique: true},
         stripe_product_id: {type: 'string', maxlength: 255, nullable: false, unique: false, references: 'stripe_products.stripe_product_id'},
-        active: {type: 'bool', nullable: false},
+        active: {type: 'boolean', nullable: false},
         nickname: {type: 'string', maxlength: 50, nullable: true},
         currency: {type: 'string', maxLength: 3, nullable: false},
         amount: {type: 'integer', nullable: false},
         type: {type: 'string', maxlength: 50, nullable: false, defaultTo: 'recurring', validations: {isIn: [['recurring', 'one_time']]}},
         interval: {type: 'string', maxlength: 50, nullable: true},
-        description: {type: 'string', maxlength: 191, nullable: true},
         created_at: {type: 'dateTime', nullable: false},
         updated_at: {type: 'dateTime', nullable: true}
     },
@@ -527,7 +527,8 @@ module.exports = {
             type: 'string',
             maxlength: 50,
             nullable: false,
-            defaultTo: 'status:-free'
+            defaultTo: 'paid',
+            validations: {isIn: [['all', 'free', 'paid']]}
         },
         error: {type: 'string', maxlength: 2000, nullable: true},
         error_data: {type: 'text', maxlength: 1000000000, fieldtype: 'long', nullable: true},

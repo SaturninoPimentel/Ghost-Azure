@@ -80,9 +80,7 @@ function zipper(done) {
             '**',
             '!node_modules', '!node_modules/**',
             '!dist', '!dist/**',
-            '!yarn-error.log',
-            '!yarn.lock',
-            '!gulpfile.js'
+            '!yarn-error.log'
         ]),
         zip(filename),
         dest('dist/')

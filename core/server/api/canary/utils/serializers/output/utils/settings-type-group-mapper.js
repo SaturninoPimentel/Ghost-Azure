@@ -13,8 +13,7 @@ const groupTypeMapping = {
     email: 'bulk_email',
     newsletter: 'newsletter',
     firstpromoter: 'firstpromoter',
-    oauth: 'oauth',
-    editor: 'editor'
+    oauth: 'oauth'
 };
 
 const mapGroupToType = (group) => {
